@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<authors>Clayton Roth</authors>
+		<dependencies>
+			<dependency id="Bogosoft.Data" version="1.0.0" />
+		</dependencies>
+		<description>Data cache-related contracts.</description>
+		<id>Bogosoft.Caching</id>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<version>1.0.0</version>
+	</metadata>
+</package>
