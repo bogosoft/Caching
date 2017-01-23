@@ -32,9 +32,8 @@
     <DocumentationFile>bin\Release\Bogosoft.Caching.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bogosoft.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bogosoft.Data.1.0.0.1\lib\net452\Bogosoft.Data.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Bogosoft.Maybe, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bogosoft.Maybe.1.0.0.2\lib\net452\Bogosoft.Maybe.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CachedItem.cs" />
-    <Compile Include="CachedItemLifetimeConstraint.cs" />
+    <Compile Include="CacheExtensions.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,118 +1,121 @@
-﻿using Bogosoft.Data;
+﻿using Bogosoft.Maybe;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Bogosoft.Caching
 {
-    /// <summary>A thread-safe, in-memory caching strategy.</summary>
-    /// <typeparam name="TItem">The type of the item to be cached.</typeparam>
-    /// <typeparam name="TKey">The type of a key corresponding to an item to be cached.</typeparam>
+    /// <summary>
+    /// An in-memory, concurrent implementation of the <see cref="ICache{TItem, TKey}"/> contract.
+    /// </summary>
+    /// <typeparam name="TItem">
+    /// The type of the object that can be cached.
+    /// </typeparam>
+    /// <typeparam name="TKey">
+    /// The type of the object that serves as a lookup key for cached objects.
+    /// </typeparam>
     public sealed class MemoryCache<TItem, TKey> : ICache<TItem, TKey>
     {
-        private IConstrain<CachedItem<TItem>> constraint;
-        private Func<TItem, TKey> keyExtractor;
-        private readonly IDictionary<TKey, CachedItem<TItem>> pool = new Dictionary<TKey, CachedItem<TItem>>();
+        Func<DateTimeOffset> dates;
 
-        /// <summary>Get the number of items in the current cache.</summary>
-        public Int32 Count
+        Dictionary<TKey, CachedItem<TItem>> items = new Dictionary<TKey, CachedItem<TItem>>();
+
+        Func<TItem, TKey> keySelector;
+
+        ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
+
+        /// <summary>
+        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class
+        /// with a given key extraction strategy.
+        /// </summary>
+        /// <param name="keySelector">
+        /// A strategy for extracting a key from a given object of the cached item type.
+        /// </param>
+        public MemoryCache(Func<TItem, TKey> keySelector)
+            : this(keySelector, () => DateTimeOffset.Now)
         {
-            get { return this.pool.Count; }
         }
 
         /// <summary>
-        /// Create a new instance of an in-memroy cache by providing a key selection strategy
-        /// and a constraint by which cached items will be checked for staleness.
+        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class with a given key extraction
+        /// strategy and a given <see cref="DateTimeOffset"/> provider.
         /// </summary>
-        /// <param name="keyExtractor">
-        /// A key extraction strategy in the form of an expression.
-        /// This strategy will be used during save operations to extract the value the cached item will
-        /// be keyed against.   
+        /// <param name="keySelector"></param>
+        /// <param name="dates"></param>
+        public MemoryCache(Func<TItem, TKey> keySelector, Func<DateTimeOffset> dates)
+        {
+            this.dates = dates;
+            this.keySelector = keySelector;
+        }
+
+        /// <summary>
+        /// Cache an object of the item type.
+        /// </summary>
+        /// <param name="item">An object of the cached item type.</param>
+        /// <param name="lifetime">
+        /// A value corresponding to the lifetime of the cached item after which the item is considered stale.
         /// </param>
-        /// <param name="constraint">A constraint by which the staleness of cached items is determined.</param>
-        public MemoryCache(
-            Func<TItem, TKey> keyExtractor,
-            IConstrain<CachedItem<TItem>> constraint = null
-            )
+        /// <param name="token">a <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the caching operation succeeded.
+        /// </returns>
+        public Task<bool> CacheAsync(TItem item, TimeSpan lifetime, CancellationToken token)
         {
-            this.constraint = constraint;
-            this.keyExtractor = keyExtractor;
-        }
+            token.ThrowIfCancellationRequested();
 
-        /// <summary>Clear the cache of all cached items.</summary>
-        /// <returns>Whether or not the clear operation was successful.</returns>
-        public Boolean Clear()
-        {
-            lock (this.pool)
+            @lock.EnterWriteLock();
+
+            try
             {
-                this.pool.Clear();
+                var key = keySelector.Invoke(item);
 
-                return true;
+                items[key] = new CachedItem<TItem>
+                {
+                    Expiry = dates.Invoke().Add(lifetime),
+                    Item = item
+                };
+
+                return Task.FromResult(items.ContainsKey(key));
+            }
+            finally
+            {
+                @lock.ExitWriteLock();
             }
         }
 
-        /// <summary>Delete a number of items from the current cache by their keys.</summary>
-        /// <param name="keys">Keys corresponding to items cached by the current cache.</param>
-        /// <returns>The number of items that were successfully deleted from the current cache.</returns>
-        public Int32 Delete(params TKey[] keys)
+        /// <summary>
+        /// Retrieve a previously cached item from the current cache by a given key.
+        /// </summary>
+        /// <param name="key">An object of the key type.</param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value that might contain an object of the cached item type.
+        /// </returns>
+        public Task<IMayBe<TItem>> GetAsync(TKey key, CancellationToken token)
         {
-            lock (this.pool)
-            {
-                var deleted = 0;
+            token.ThrowIfCancellationRequested();
 
-                foreach (var k in keys)
+            @lock.EnterReadLock();
+
+            try
+            {
+                IMayBe<TItem> result;
+
+                if (items.ContainsKey(key) && items[key].Expiry > dates.Invoke())
                 {
-                    if (this.pool.Remove(k))
-                    {
-                        ++deleted;
-                    }
+                    result = new MayBe<TItem>(items[key].Item);
+                }
+                else
+                {
+                    result = MayBe<TItem>.Empty;
                 }
 
-                return deleted;
+                return Task.FromResult(result);
             }
-        }
-
-        /// <summary>Retrieve a cached item from the current cache.</summary>
-        /// <param name="key">The key corresponding to a cached item.</param>
-        /// <returns>The cached item if found; the type's default value otherwise.</returns>
-        public TItem Get(TKey key)
-        {
-            lock (this.pool)
+            finally
             {
-                if (this.pool.ContainsKey(key))
-                {
-                    var entry = this.pool[key];
-
-                    if(this.constraint == null)
-                    {
-                        return entry.Item;
-                    }
-
-                    if (this.constraint.Validate(entry))
-                    {
-                        return entry.Item;
-                    }
-                    else
-                    {
-                        this.pool.Remove(key);
-                    }
-                }
-
-                return default(TItem);
-            }
-        }
-
-        /// <summary>Store an item in the current cache.</summary>
-        /// <param name="item">An item to store in the current cache.</param>
-        /// <returns>Whether or not the item was successfully saved to the current cache.</returns>
-        public Boolean Save(TItem item)
-        {
-            lock (this.pool)
-            {
-                var key = this.keyExtractor.Invoke(item);
-
-                this.pool[key] = new CachedItem<TItem>(item);
-
-                return this.pool.ContainsKey(key);
+                @lock.ExitReadLock();
             }
         }
     }
