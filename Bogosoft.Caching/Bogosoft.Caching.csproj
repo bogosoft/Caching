@@ -32,8 +32,8 @@
     <DocumentationFile>bin\Release\Bogosoft.Caching.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bogosoft.Maybe, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bogosoft.Maybe.1.0.0.2\lib\net452\Bogosoft.Maybe.dll</HintPath>
+    <Reference Include="Bogosoft.Maybe, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bogosoft.Maybe.1.0.0.6\lib\net452\Bogosoft.Maybe.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

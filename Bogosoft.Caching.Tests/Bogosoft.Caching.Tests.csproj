@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bogosoft.Maybe, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bogosoft.Maybe.1.0.0.2\lib\net452\Bogosoft.Maybe.dll</HintPath>
+    <Reference Include="Bogosoft.Maybe, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bogosoft.Maybe.1.0.0.6\lib\net452\Bogosoft.Maybe.dll</HintPath>
     </Reference>
     <Reference Include="Bogosoft.Testing.Objects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bogosoft.Testing.Objects.1.0.0.1\lib\net452\Bogosoft.Testing.Objects.dll</HintPath>
