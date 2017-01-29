@@ -15,7 +15,7 @@ namespace Bogosoft.Caching
     /// <typeparam name="TKey">
     /// The type of the object that serves as a lookup key for cached objects.
     /// </typeparam>
-    public sealed class MemoryCache<TItem, TKey> : ICache<TItem, TKey>
+    public sealed class AsyncCache<TItem, TKey> : ICache<TItem, TKey>
     {
         Func<DateTimeOffset> dates;
 
@@ -28,7 +28,7 @@ namespace Bogosoft.Caching
         TimeSpan ttl;
 
         /// <summary>
-        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class
+        /// Create a new instance of the <see cref="AsyncCache{TItem, TKey}"/> class
         /// with a given key extraction strategy.
         /// </summary>
         /// <param name="keySelector">
@@ -38,13 +38,13 @@ namespace Bogosoft.Caching
         /// A value corresponding to the time to live for an object of the cached item type
         /// before it is considered stale.
         /// </param>
-        public MemoryCache(Func<TItem, TKey> keySelector, TimeSpan ttl)
+        public AsyncCache(Func<TItem, TKey> keySelector, TimeSpan ttl)
             : this(keySelector, ttl, () => DateTimeOffset.Now)
         {
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class with a given key extraction
+        /// Create a new instance of the <see cref="AsyncCache{TItem, TKey}"/> class with a given key extraction
         /// strategy and a given <see cref="DateTimeOffset"/> provider.
         /// </summary>
         /// <param name="keySelector"></param>
@@ -53,7 +53,7 @@ namespace Bogosoft.Caching
         /// before it is considered stale.
         /// </param>
         /// <param name="dates"></param>
-        public MemoryCache(Func<TItem, TKey> keySelector, TimeSpan ttl, Func<DateTimeOffset> dates)
+        public AsyncCache(Func<TItem, TKey> keySelector, TimeSpan ttl, Func<DateTimeOffset> dates)
         {
             this.dates = dates;
             this.keySelector = keySelector;

@@ -48,7 +48,7 @@
     <Compile Include="CachedItem.cs" />
     <Compile Include="CacheExtensions.cs" />
     <Compile Include="ICache.cs" />
-    <Compile Include="MemoryCache.cs" />
+    <Compile Include="AsyncCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
