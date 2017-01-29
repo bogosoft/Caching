@@ -17,9 +17,16 @@ namespace Bogosoft.Caching
     /// </typeparam>
     public sealed class AsyncCache<TItem, TKey> : ICache<TItem, TKey>
     {
+        struct CachedItem
+        {
+            internal DateTimeOffset Expiry;
+
+            internal TItem Item;
+        }
+
         Func<DateTimeOffset> dates;
 
-        Dictionary<TKey, CachedItem<TItem>> items = new Dictionary<TKey, CachedItem<TItem>>();
+        Dictionary<TKey, CachedItem> items = new Dictionary<TKey, CachedItem>();
 
         ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
@@ -75,7 +82,7 @@ namespace Bogosoft.Caching
 
             try
             {
-                items[key] = new CachedItem<TItem>
+                items[key] = new CachedItem
                 {
                     Expiry = dates.Invoke().Add(ttl),
                     Item = item
