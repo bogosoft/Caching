@@ -14,11 +14,11 @@ namespace Bogosoft.Caching.Tests
         {
             var msecs = 1000;
 
-            var cache = new AsyncCache<CelestialBody, string>(x => x.Name, new TimeSpan(0, 0, 0, 0, msecs));
+            var cache = new AsyncCache<CelestialBody, string>(new TimeSpan(0, 0, 0, 0, msecs));
 
             var venus = CelestialBody.Venus;
 
-            (await cache.CacheAsync(venus)).ShouldBeTrue();
+            (await cache.CacheAsync(venus.Name, venus)).ShouldBeTrue();
 
             var result = await cache.GetAsync(venus.Name);
 
@@ -38,7 +38,7 @@ namespace Bogosoft.Caching.Tests
         [TestCase]
         public async Task CacheReportsMissWhenGettingNonCachedItemAsync()
         {
-            var cache = new AsyncCache<CelestialBody, string>(x => x.Name, TimeSpan.MaxValue);
+            var cache = new AsyncCache<CelestialBody, string>(TimeSpan.MaxValue);
 
             var result = await cache.GetAsync(CelestialBody.Mars.Name);
 
@@ -50,11 +50,11 @@ namespace Bogosoft.Caching.Tests
         [TestCase]
         public async Task CanCacheItemWithMemoryCacheAsync()
         {
-            var cache = new AsyncCache<CelestialBody, string>(x => x.Name, new TimeSpan(30, 0, 0));
+            var cache = new AsyncCache<CelestialBody, string>(new TimeSpan(30, 0, 0));
 
             var earth = CelestialBody.Earth;
 
-            (await cache.CacheAsync(earth)).ShouldBeTrue();
+            (await cache.CacheAsync(earth.Name, earth)).ShouldBeTrue();
 
             var result = await cache.GetAsync(earth.Name);
 

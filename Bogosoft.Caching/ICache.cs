@@ -14,12 +14,15 @@ namespace Bogosoft.Caching
         /// <summary>
         /// Cache an object of the item type.
         /// </summary>
+        /// <param name="key">
+        /// An object of the key type which will serve as the key by which an item is cached.
+        /// </param>
         /// <param name="item">An object of the cached item type.</param>
         /// <param name="token">a <see cref="CancellationToken"/> object.</param>
         /// <returns>
         /// A value indicating whether or not the caching operation succeeded.
         /// </returns>
-        Task<bool> CacheAsync(TItem item, CancellationToken token);
+        Task<bool> CacheAsync(TKey key, TItem item, CancellationToken token);
 
         /// <summary>
         /// Retrieve a previously cached item from the current cache by a given key.
