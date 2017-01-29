@@ -56,6 +56,8 @@ namespace Bogosoft.Caching.Tests
 
             (await cache.CacheAsync(earth.Name, earth)).ShouldBeTrue();
 
+            (await cache.IsCachedAsync(earth.Name)).ShouldBeTrue();
+
             var result = await cache.GetAsync(earth.Name);
 
             result.HasValue.ShouldBeTrue();
