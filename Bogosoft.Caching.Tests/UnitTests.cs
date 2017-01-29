@@ -79,6 +79,10 @@ namespace Bogosoft.Caching.Tests
             (await cache.RemoveAsync(moon.Name)).ShouldBeTrue();
 
             (await cache.ContainsKeyAsync(moon.Name)).ShouldBeFalse();
+
+            var result = await cache.GetAsync(moon.Name);
+
+            result.HasValue.ShouldBeFalse();
         }
     }
 }
