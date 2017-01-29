@@ -33,6 +33,11 @@ namespace Bogosoft.Caching
         TimeSpan ttl;
 
         /// <summary>
+        /// Occurs when an item is successfully cached.
+        /// </summary>
+        public event ItemCachedEventHandler<TItem, TKey> ItemCached;
+
+        /// <summary>
         /// Create a new instance of the <see cref="AsyncCache{TItem, TKey}"/> class
         /// with a given key extraction strategy.
         /// </summary>
@@ -88,7 +93,19 @@ namespace Bogosoft.Caching
                     Item = item
                 };
 
-                return Task.FromResult(items.ContainsKey(key));
+                if (items.ContainsKey(key))
+                {
+                    if(ItemCached != null)
+                    {
+                        ItemCached.Invoke(this, new ItemCachedEventArgs<TItem, TKey>(key, item));
+                    }
+
+                    return Task.FromResult(true);
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
             }
             finally
             {

@@ -54,7 +54,13 @@ namespace Bogosoft.Caching.Tests
 
             var earth = CelestialBody.Earth;
 
+            var fired = false;
+
+            cache.ItemCached += (sender, args) => fired = true;
+
             (await cache.CacheAsync(earth.Name, earth)).ShouldBeTrue();
+
+            fired.ShouldBeTrue();
 
             (await cache.ContainsKeyAsync(earth.Name)).ShouldBeTrue();
 

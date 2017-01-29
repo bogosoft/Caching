@@ -12,6 +12,11 @@ namespace Bogosoft.Caching
     public interface ICache<TItem, TKey>
     {
         /// <summary>
+        /// Occurs when an item is successfully cached.
+        /// </summary>
+        event ItemCachedEventHandler<TItem, TKey> ItemCached;
+
+        /// <summary>
         /// Cache an object of the item type.
         /// </summary>
         /// <param name="key">
