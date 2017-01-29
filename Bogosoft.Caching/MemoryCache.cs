@@ -25,6 +25,8 @@ namespace Bogosoft.Caching
 
         ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
+        TimeSpan ttl;
+
         /// <summary>
         /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class
         /// with a given key extraction strategy.
@@ -32,8 +34,12 @@ namespace Bogosoft.Caching
         /// <param name="keySelector">
         /// A strategy for extracting a key from a given object of the cached item type.
         /// </param>
-        public MemoryCache(Func<TItem, TKey> keySelector)
-            : this(keySelector, () => DateTimeOffset.Now)
+        /// <param name="ttl">
+        /// A value corresponding to the time to live for an object of the cached item type
+        /// before it is considered stale.
+        /// </param>
+        public MemoryCache(Func<TItem, TKey> keySelector, TimeSpan ttl)
+            : this(keySelector, ttl, () => DateTimeOffset.Now)
         {
         }
 
@@ -42,25 +48,27 @@ namespace Bogosoft.Caching
         /// strategy and a given <see cref="DateTimeOffset"/> provider.
         /// </summary>
         /// <param name="keySelector"></param>
+        /// <param name="ttl">
+        /// A value corresponding to the time to live for an object of the cached item type
+        /// before it is considered stale.
+        /// </param>
         /// <param name="dates"></param>
-        public MemoryCache(Func<TItem, TKey> keySelector, Func<DateTimeOffset> dates)
+        public MemoryCache(Func<TItem, TKey> keySelector, TimeSpan ttl, Func<DateTimeOffset> dates)
         {
             this.dates = dates;
             this.keySelector = keySelector;
+            this.ttl = ttl;
         }
 
         /// <summary>
         /// Cache an object of the item type.
         /// </summary>
         /// <param name="item">An object of the cached item type.</param>
-        /// <param name="lifetime">
-        /// A value corresponding to the lifetime of the cached item after which the item is considered stale.
-        /// </param>
         /// <param name="token">a <see cref="CancellationToken"/> object.</param>
         /// <returns>
         /// A value indicating whether or not the caching operation succeeded.
         /// </returns>
-        public Task<bool> CacheAsync(TItem item, TimeSpan lifetime, CancellationToken token)
+        public Task<bool> CacheAsync(TItem item, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -72,7 +80,7 @@ namespace Bogosoft.Caching
 
                 items[key] = new CachedItem<TItem>
                 {
-                    Expiry = dates.Invoke().Add(lifetime),
+                    Expiry = dates.Invoke().Add(ttl),
                     Item = item
                 };
 

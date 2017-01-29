@@ -1,5 +1,4 @@
 ﻿using Bogosoft.Maybe;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,14 +15,11 @@ namespace Bogosoft.Caching
         /// Cache an object of the item type.
         /// </summary>
         /// <param name="item">An object of the cached item type.</param>
-        /// <param name="lifetime">
-        /// A value corresponding to the lifetime of the cached item after which the item is considered stale.
-        /// </param>
         /// <param name="token">a <see cref="CancellationToken"/> object.</param>
         /// <returns>
         /// A value indicating whether or not the caching operation succeeded.
         /// </returns>
-        Task<bool> CacheAsync(TItem item, TimeSpan lifetime, CancellationToken token);
+        Task<bool> CacheAsync(TItem item, CancellationToken token);
 
         /// <summary>
         /// Retrieve a previously cached item from the current cache by a given key.
