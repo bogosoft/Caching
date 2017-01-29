@@ -48,5 +48,26 @@ namespace Bogosoft.Caching
         {
             return await cache.GetAsync(key, CancellationToken.None).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Determine if the current cache currently contains an item referenced by a given key. Calling this method
+        /// is equivalent to calling <see cref="ICache{TItem, TKey}.IsCachedAsync(TKey, CancellationToken)"/>
+        /// with a value of <see cref="CancellationToken.None"/>.
+        /// </summary>
+        /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
+        /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>
+        /// <param name="cache">The current <see cref="ICache{TItem, TKey}"/> implementation.</param>
+        /// <param name="key">An object of the key type.</param>
+        /// <returns>
+        /// A value indicating whether or not the current cache contains an object
+        /// associated with the given key value.
+        /// </returns>
+        public static async Task<bool> IsCachedAsync<TItem, TKey>(
+            this ICache<TItem, TKey> cache,
+            TKey key
+            )
+        {
+            return await cache.IsCachedAsync(key, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

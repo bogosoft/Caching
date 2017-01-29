@@ -126,5 +126,32 @@ namespace Bogosoft.Caching
                 @lock.ExitReadLock();
             }
         }
+
+        /// <summary>
+        /// Determine if the current cache currently contains an item referenced by a given key.
+        /// </summary>
+        /// <param name="key">
+        /// A value corresponding to the key of a potentially cached item.
+        /// </param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the current cache contains an object
+        /// associated with the given key value.
+        /// </returns>
+        public Task<bool> IsCachedAsync(TKey key, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            @lock.EnterReadLock();
+
+            try
+            {
+                return Task.FromResult(items.ContainsKey(key));
+            }
+            finally
+            {
+                @lock.ExitReadLock();
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Bogosoft.Caching
     /// Indicates that an implementation is capable of caching items of a specified type.
     /// </summary>
     /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
-    /// <typeparam name="TKey">The type of thekey used to retrieve a cached object of the item type.</typeparam>
+    /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>
     public interface ICache<TItem, TKey>
     {
         /// <summary>
@@ -30,5 +30,18 @@ namespace Bogosoft.Caching
         /// A value that might contain an object of the cached item type.
         /// </returns>
         Task<IMayBe<TItem>> GetAsync(TKey key, CancellationToken token);
+
+        /// <summary>
+        /// Determine if the current cache currently contains an item referenced by a given key.
+        /// </summary>
+        /// <param name="key">
+        /// A value corresponding to the key of a potentially cached item.
+        /// </param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the current cache contains an object
+        /// associated with the given key value.
+        /// </returns>
+        Task<bool> IsCachedAsync(TKey key, CancellationToken token);
     }
 }
