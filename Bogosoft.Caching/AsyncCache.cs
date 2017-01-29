@@ -97,6 +97,32 @@ namespace Bogosoft.Caching
         }
 
         /// <summary>
+        /// Determine if the current cache currently contains a given key.
+        /// </summary>
+        /// <param name="key">
+        /// An object of the key type.
+        /// </param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the current cache contains the given key.
+        /// </returns>
+        public Task<bool> ContainsKeyAsync(TKey key, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            @lock.EnterReadLock();
+
+            try
+            {
+                return Task.FromResult(items.ContainsKey(key));
+            }
+            finally
+            {
+                @lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
         /// Retrieve a previously cached item from the current cache by a given key.
         /// </summary>
         /// <param name="key">An object of the key type.</param>
@@ -124,33 +150,6 @@ namespace Bogosoft.Caching
                 }
 
                 return Task.FromResult(result);
-            }
-            finally
-            {
-                @lock.ExitReadLock();
-            }
-        }
-
-        /// <summary>
-        /// Determine if the current cache currently contains an item referenced by a given key.
-        /// </summary>
-        /// <param name="key">
-        /// A value corresponding to the key of a potentially cached item.
-        /// </param>
-        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
-        /// <returns>
-        /// A value indicating whether or not the current cache contains an object
-        /// associated with the given key value.
-        /// </returns>
-        public Task<bool> IsCachedAsync(TKey key, CancellationToken token)
-        {
-            token.ThrowIfCancellationRequested();
-
-            @lock.EnterReadLock();
-
-            try
-            {
-                return Task.FromResult(items.ContainsKey(key));
             }
             finally
             {

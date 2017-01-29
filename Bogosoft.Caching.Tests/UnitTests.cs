@@ -56,7 +56,7 @@ namespace Bogosoft.Caching.Tests
 
             (await cache.CacheAsync(earth.Name, earth)).ShouldBeTrue();
 
-            (await cache.IsCachedAsync(earth.Name)).ShouldBeTrue();
+            (await cache.ContainsKeyAsync(earth.Name)).ShouldBeTrue();
 
             var result = await cache.GetAsync(earth.Name);
 
@@ -74,11 +74,11 @@ namespace Bogosoft.Caching.Tests
 
             (await cache.CacheAsync(moon.Name, moon)).ShouldBeTrue();
 
-            (await cache.IsCachedAsync(moon.Name)).ShouldBeTrue();
+            (await cache.ContainsKeyAsync(moon.Name)).ShouldBeTrue();
 
             (await cache.RemoveAsync(moon.Name)).ShouldBeTrue();
 
-            (await cache.IsCachedAsync(moon.Name)).ShouldBeFalse();
+            (await cache.ContainsKeyAsync(moon.Name)).ShouldBeFalse();
         }
     }
 }
