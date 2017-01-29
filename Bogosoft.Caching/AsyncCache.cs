@@ -150,5 +150,47 @@ namespace Bogosoft.Caching
                 @lock.ExitReadLock();
             }
         }
+
+        /// <summary>
+        /// Attempt to remove a previously cached item from the current cache.
+        /// </summary>
+        /// <param name="key">
+        /// A value corresponding to the key that the item was originally cached against.
+        /// </param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the removal operation was successful.
+        /// </returns>
+        public Task<bool> RemoveAsync(TKey key, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            @lock.EnterUpgradeableReadLock();
+
+            try
+            {
+                if (items.ContainsKey(key))
+                {
+                    @lock.EnterWriteLock();
+
+                    try
+                    {
+                        return Task.FromResult(items.Remove(key));
+                    }
+                    finally
+                    {
+                        @lock.ExitWriteLock();
+                    }
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
+            }
+            finally
+            {
+                @lock.ExitUpgradeableReadLock();
+            }
+        }
     }
 }

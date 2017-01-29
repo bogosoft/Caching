@@ -73,5 +73,25 @@ namespace Bogosoft.Caching
         {
             return await cache.IsCachedAsync(key, CancellationToken.None).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Attempt to remove a previously cached item from the current cache. Calling this method is equivalent
+        /// to calling <see cref="ICache{TItem, TKey}.RemoveAsync(TKey, CancellationToken)"/> with a value of
+        /// <see cref="CancellationToken.None"/>.
+        /// </summary>
+        /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
+        /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>
+        /// <param name="cache">The current <see cref="ICache{TItem, TKey}"/> implementation.</param>
+        /// <param name="key">An object of the key type.</param>
+        /// <returns>
+        /// A value indicating whether or not the removal operation was successful.
+        /// </returns>
+        public static async Task<bool> RemoveAsync<TItem, TKey>(
+            this ICache<TItem, TKey> cache,
+            TKey key
+            )
+        {
+            return await cache.RemoveAsync(key, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

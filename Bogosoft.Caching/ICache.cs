@@ -46,5 +46,17 @@ namespace Bogosoft.Caching
         /// associated with the given key value.
         /// </returns>
         Task<bool> IsCachedAsync(TKey key, CancellationToken token);
+
+        /// <summary>
+        /// Attempt to remove a previously cached item from the current cache.
+        /// </summary>
+        /// <param name="key">
+        /// A value corresponding to the key that the item was originally cached against.
+        /// </param>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value indicating whether or not the removal operation was successful.
+        /// </returns>
+        Task<bool> RemoveAsync(TKey key, CancellationToken token);
     }
 }

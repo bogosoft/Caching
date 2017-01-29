@@ -64,5 +64,21 @@ namespace Bogosoft.Caching.Tests
 
             result.Value.ShouldEqual(earth);
         }
+
+        [TestCase]
+        public async Task CanRemovePreviouslyCachedItem()
+        {
+            var cache = new AsyncCache<CelestialBody, string>(new TimeSpan(30, 0, 0));
+
+            var moon = CelestialBody.Moon;
+
+            (await cache.CacheAsync(moon.Name, moon)).ShouldBeTrue();
+
+            (await cache.IsCachedAsync(moon.Name)).ShouldBeTrue();
+
+            (await cache.RemoveAsync(moon.Name)).ShouldBeTrue();
+
+            (await cache.IsCachedAsync(moon.Name)).ShouldBeFalse();
+        }
     }
 }
