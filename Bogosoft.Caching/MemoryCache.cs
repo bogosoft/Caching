@@ -26,8 +26,7 @@ namespace Bogosoft.Caching
         public event ItemCachedEventHandler<TItem, TKey> ItemCached;
 
         /// <summary>
-        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class
-        /// with a given key extraction strategy.
+        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class.
         /// </summary>
         /// <param name="ttl">
         /// A value corresponding to the time to live for an object of the cached item type
@@ -39,8 +38,7 @@ namespace Bogosoft.Caching
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class with a given key extraction
-        /// strategy and a given <see cref="DateTimeOffset"/> provider.
+        /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class.
         /// </summary>
         /// <param name="ttl">
         /// A value corresponding to the time to live for an object of the cached item type
