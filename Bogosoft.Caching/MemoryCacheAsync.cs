@@ -15,7 +15,7 @@ namespace Bogosoft.Caching
     /// <typeparam name="TKey">
     /// The type of the object that serves as a lookup key for cached objects.
     /// </typeparam>
-    public sealed class AsyncCache<TItem, TKey> : ICacheAsync<TItem, TKey>
+    public sealed class MemoryCacheAsync<TItem, TKey> : ICacheAsync<TItem, TKey>
     {
         Func<DateTimeOffset> dates;
 
@@ -31,19 +31,19 @@ namespace Bogosoft.Caching
         public event ItemCachedEventHandler<TItem, TKey> ItemCached;
 
         /// <summary>
-        /// Create a new instance of the <see cref="AsyncCache{TItem, TKey}"/> class.
+        /// Create a new instance of the <see cref="MemoryCacheAsync{TItem, TKey}"/> class.
         /// </summary>
         /// <param name="ttl">
         /// A value corresponding to the time to live for an object of the cached item type
         /// before it is considered stale.
         /// </param>
-        public AsyncCache(TimeSpan ttl)
+        public MemoryCacheAsync(TimeSpan ttl)
             : this(ttl, () => DateTimeOffset.Now)
         {
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="AsyncCache{TItem, TKey}"/> class.
+        /// Create a new instance of the <see cref="MemoryCacheAsync{TItem, TKey}"/> class.
         /// </summary>
         /// <param name="ttl">
         /// A value corresponding to the time to live for an object of the cached item type
@@ -53,7 +53,7 @@ namespace Bogosoft.Caching
         /// A provider for generating <see cref="DateTimeOffset"/> objects when a reference date is needed,
         /// i.e. when a staleness check is performed or when an expiration date needs to be calculated.
         /// </param>
-        public AsyncCache(TimeSpan ttl, Func<DateTimeOffset> dates)
+        public MemoryCacheAsync(TimeSpan ttl, Func<DateTimeOffset> dates)
         {
             this.dates = dates;
             this.ttl = ttl;
