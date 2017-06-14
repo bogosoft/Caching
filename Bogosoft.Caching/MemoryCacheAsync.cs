@@ -1,6 +1,5 @@
 ﻿using Bogosoft.Maybe;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,13 +16,7 @@ namespace Bogosoft.Caching
     /// </typeparam>
     public sealed class MemoryCacheAsync<TItem, TKey> : ICacheAsync<TItem, TKey>
     {
-        Func<DateTimeOffset> dates;
-
-        Dictionary<TKey, CachedItem<TItem>> items = new Dictionary<TKey, CachedItem<TItem>>();
-
-        ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
-
-        TimeSpan ttl;
+        MemoryCache<TItem, TKey> cache;
 
         /// <summary>
         /// Occurs when an item is successfully cached.
@@ -63,8 +56,7 @@ namespace Bogosoft.Caching
         /// </param>
         public MemoryCacheAsync(TimeSpan ttl, Func<DateTimeOffset> dates)
         {
-            this.dates = dates;
-            this.ttl = ttl;
+            cache = new MemoryCache<TItem, TKey>(ttl, dates);
         }
 
         /// <summary>
@@ -82,34 +74,14 @@ namespace Bogosoft.Caching
         {
             token.ThrowIfCancellationRequested();
 
-            @lock.EnterWriteLock();
+            var success = cache.Cache(key, item);
 
-            try
+            if (success && ItemCached != null)
             {
-                items[key] = new CachedItem<TItem>
-                {
-                    Expiry = dates.Invoke().Add(ttl),
-                    Item = item
-                };
-
-                if (items.ContainsKey(key))
-                {
-                    if(ItemCached != null)
-                    {
-                        ItemCached.Invoke(this, new ItemCachedEventArgs<TItem, TKey>(key, item));
-                    }
-
-                    return Task.FromResult(true);
-                }
-                else
-                {
-                    return Task.FromResult(false);
-                }
+                ItemCached.Invoke(this, new ItemCachedEventArgs<TItem, TKey>(key, item));
             }
-            finally
-            {
-                @lock.ExitWriteLock();
-            }
+
+            return Task.FromResult(success);
         }
 
         /// <summary>
@@ -123,20 +95,7 @@ namespace Bogosoft.Caching
         {
             token.ThrowIfCancellationRequested();
 
-            @lock.EnterWriteLock();
-
-            try
-            {
-                var count = items.Count;
-
-                items.Clear();
-
-                return Task.FromResult(count);
-            }
-            finally
-            {
-                @lock.ExitWriteLock();
-            }
+            return Task.FromResult(cache.Clear());
         }
 
         /// <summary>
@@ -153,16 +112,7 @@ namespace Bogosoft.Caching
         {
             token.ThrowIfCancellationRequested();
 
-            @lock.EnterReadLock();
-
-            try
-            {
-                return Task.FromResult(items.ContainsKey(key));
-            }
-            finally
-            {
-                @lock.ExitReadLock();
-            }
+            return Task.FromResult(cache.Contains(key));
         }
 
         /// <summary>
@@ -177,27 +127,7 @@ namespace Bogosoft.Caching
         {
             token.ThrowIfCancellationRequested();
 
-            @lock.EnterReadLock();
-
-            try
-            {
-                IMayBe<TItem> result;
-
-                if (items.ContainsKey(key) && items[key].Expiry > dates.Invoke())
-                {
-                    result = new MayBe<TItem>(items[key].Item);
-                }
-                else
-                {
-                    result = MayBe<TItem>.Empty;
-                }
-
-                return Task.FromResult(result);
-            }
-            finally
-            {
-                @lock.ExitReadLock();
-            }
+            return Task.FromResult(cache.Get(key));
         }
 
         /// <summary>
@@ -214,32 +144,7 @@ namespace Bogosoft.Caching
         {
             token.ThrowIfCancellationRequested();
 
-            @lock.EnterUpgradeableReadLock();
-
-            try
-            {
-                if (items.ContainsKey(key))
-                {
-                    @lock.EnterWriteLock();
-
-                    try
-                    {
-                        return Task.FromResult(items.Remove(key));
-                    }
-                    finally
-                    {
-                        @lock.ExitWriteLock();
-                    }
-                }
-                else
-                {
-                    return Task.FromResult(false);
-                }
-            }
-            finally
-            {
-                @lock.ExitUpgradeableReadLock();
-            }
+            return Task.FromResult(cache.Remove(key));
         }
     }
 }
