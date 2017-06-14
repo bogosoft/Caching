@@ -26,6 +26,14 @@ namespace Bogosoft.Caching
         public event ItemCachedEventHandler<TItem, TKey> ItemCached;
 
         /// <summary>
+        /// Create a new instance of the <see cref="MemoryCacheAsync{TItem, TKey}"/> class.
+        /// </summary>
+        public MemoryCache()
+            : this(TimeSpan.MaxValue, () => DateTimeOffset.Now)
+        {
+        }
+
+        /// <summary>
         /// Create a new instance of the <see cref="MemoryCache{TItem, TKey}"/> class.
         /// </summary>
         /// <param name="ttl">

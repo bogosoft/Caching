@@ -33,6 +33,14 @@ namespace Bogosoft.Caching
         /// <summary>
         /// Create a new instance of the <see cref="MemoryCacheAsync{TItem, TKey}"/> class.
         /// </summary>
+        public MemoryCacheAsync()
+            : this(TimeSpan.MaxValue, () => DateTimeOffset.Now)
+        {
+        }
+
+        /// <summary>
+        /// Create a new instance of the <see cref="MemoryCacheAsync{TItem, TKey}"/> class.
+        /// </summary>
         /// <param name="ttl">
         /// A value corresponding to the time to live for an object of the cached item type
         /// before it is considered stale.
