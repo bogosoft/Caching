@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncCacheExtensions.cs" />
+    <Compile Include="MemoryCache.cs" />
+    <Compile Include="CachedItem.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheAsync.cs" />
     <Compile Include="AsyncCache.cs" />
