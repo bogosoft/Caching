@@ -30,6 +30,15 @@ namespace Bogosoft.Caching
         Task<bool> CacheAsync(TKey key, TItem item, CancellationToken token);
 
         /// <summary>
+        /// Clear the current cache of all cached items.
+        /// </summary>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value corresponding to the number of cached items cleared.
+        /// </returns>
+        Task<int> ClearAsync(CancellationToken token);
+
+        /// <summary>
         /// Determine if the current cache currently contains a given key.
         /// </summary>
         /// <param name="key">

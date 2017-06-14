@@ -34,6 +34,20 @@ namespace Bogosoft.Caching
         }
 
         /// <summary>
+        /// Clear the current cache of all cached items.
+        /// </summary>
+        /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
+        /// <typeparam name="TKey">The type of thekey used to retrieve a cached object of the item type.</typeparam>
+        /// <param name="cache">The current <see cref="ICacheAsync{TItem, TKey}"/> implementation.</param>
+        /// <returns>
+        /// A value corresponding to the number of cached items cleared.
+        /// </returns>
+        public static Task<int> ClearAsync<TItem, TKey>(this ICacheAsync<TItem, TKey> cache)
+        {
+            return cache.ClearAsync(CancellationToken.None);
+        }
+
+        /// <summary>
         /// Determine if the current cache currently contains a given key. Calling this method
         /// is equivalent to calling <see cref="ICacheAsync{TItem, TKey}.ContainsKeyAsync(TKey, CancellationToken)"/>
         /// with a value of <see cref="CancellationToken.None"/>.

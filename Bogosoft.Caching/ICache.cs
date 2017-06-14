@@ -27,6 +27,14 @@ namespace Bogosoft.Caching
         bool Cache(TKey key, TItem item);
 
         /// <summary>
+        /// Clear the current cache of all cached items.
+        /// </summary>
+        /// <returns>
+        /// A value corresponding to the number of cached items cleared.
+        /// </returns>
+        int Clear();
+
+        /// <summary>
         /// Determine if the current cache currently contains a given key.
         /// </summary>
         /// <param name="key">

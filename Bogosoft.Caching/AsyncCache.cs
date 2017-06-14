@@ -114,6 +114,33 @@ namespace Bogosoft.Caching
         }
 
         /// <summary>
+        /// Clear the current cache of all cached items.
+        /// </summary>
+        /// <param name="token">A <see cref="CancellationToken"/> object.</param>
+        /// <returns>
+        /// A value corresponding to the number of cached items cleared.
+        /// </returns>
+        public Task<int> ClearAsync(CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            @lock.EnterWriteLock();
+
+            try
+            {
+                var count = items.Count;
+
+                items.Clear();
+
+                return Task.FromResult(count);
+            }
+            finally
+            {
+                @lock.ExitWriteLock();
+            }
+        }
+
+        /// <summary>
         /// Determine if the current cache currently contains a given key.
         /// </summary>
         /// <param name="key">
