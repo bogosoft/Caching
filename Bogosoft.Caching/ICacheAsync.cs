@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Bogosoft.Caching
 {
     /// <summary>
-    /// Indicates that an implementation is capable of caching items of a specified type.
+    /// Indicates that an implementation is capable of asynchronously caching items of a specified type.
     /// </summary>
     /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
     /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>
