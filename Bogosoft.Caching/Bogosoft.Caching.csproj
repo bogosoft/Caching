@@ -45,8 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheExtensions.cs" />
-    <Compile Include="ICache.cs" />
+    <Compile Include="AsyncCacheExtensions.cs" />
+    <Compile Include="ICacheAsync.cs" />
     <Compile Include="AsyncCache.cs" />
     <Compile Include="ItemCachedEventArgs.cs" />
     <Compile Include="ItemCachedEventHandler.cs" />

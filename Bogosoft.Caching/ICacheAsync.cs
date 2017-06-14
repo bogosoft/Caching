@@ -9,7 +9,7 @@ namespace Bogosoft.Caching
     /// </summary>
     /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
     /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>
-    public interface ICache<TItem, TKey>
+    public interface ICacheAsync<TItem, TKey>
     {
         /// <summary>
         /// Occurs when an item is successfully cached.

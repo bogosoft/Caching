@@ -1,7 +1,7 @@
 ﻿namespace Bogosoft.Caching
 {
     /// <summary>
-    /// Represents the handler that will handle the <see cref="ICache{TItem, TKey}.ItemCached"/> event.
+    /// Represents the handler that will handle the <see cref="ICacheAsync{TItem, TKey}.ItemCached"/> event.
     /// </summary>
     /// <typeparam name="TItem">The type of the item that can be cached.</typeparam>
     /// <typeparam name="TKey">The type of the key used to retrieve a cached object of the item type.</typeparam>

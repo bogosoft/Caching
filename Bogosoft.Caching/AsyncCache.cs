@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Bogosoft.Caching
 {
     /// <summary>
-    /// An in-memory, concurrent implementation of the <see cref="ICache{TItem, TKey}"/> contract.
+    /// An in-memory, concurrent implementation of the <see cref="ICacheAsync{TItem, TKey}"/> contract.
     /// </summary>
     /// <typeparam name="TItem">
     /// The type of the object that can be cached.
@@ -15,7 +15,7 @@ namespace Bogosoft.Caching
     /// <typeparam name="TKey">
     /// The type of the object that serves as a lookup key for cached objects.
     /// </typeparam>
-    public sealed class AsyncCache<TItem, TKey> : ICache<TItem, TKey>
+    public sealed class AsyncCache<TItem, TKey> : ICacheAsync<TItem, TKey>
     {
         struct CachedItem
         {
