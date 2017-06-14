@@ -24,13 +24,13 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value indicating whether or not the caching operation succeeded.
         /// </returns>
-        public static async Task<bool> CacheAsync<TItem, TKey>(
+        public static Task<bool> CacheAsync<TItem, TKey>(
             this ICache<TItem, TKey> cache,
             TKey key,
             TItem item
             )
         {
-            return await cache.CacheAsync(key, item, CancellationToken.None).ConfigureAwait(false);
+            return cache.CacheAsync(key, item, CancellationToken.None);
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value indicating whether or not the current cache contains the given key.
         /// </returns>
-        public static async Task<bool> ContainsKeyAsync<TItem, TKey>(
+        public static Task<bool> ContainsKeyAsync<TItem, TKey>(
             this ICache<TItem, TKey> cache,
             TKey key
             )
         {
-            return await cache.ContainsKeyAsync(key, CancellationToken.None).ConfigureAwait(false);
+            return cache.ContainsKeyAsync(key, CancellationToken.None);
         }
 
         /// <summary>
@@ -65,12 +65,12 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value that might contain an object of the cached item type.
         /// </returns>
-        public static async Task<IMayBe<TItem>> GetAsync<TItem, TKey>(
+        public static Task<IMayBe<TItem>> GetAsync<TItem, TKey>(
             this ICache<TItem, TKey> cache,
             TKey key
             )
         {
-            return await cache.GetAsync(key, CancellationToken.None).ConfigureAwait(false);
+            return cache.GetAsync(key, CancellationToken.None);
         }
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value indicating whether or not the removal operation was successful.
         /// </returns>
-        public static async Task<bool> RemoveAsync<TItem, TKey>(
+        public static Task<bool> RemoveAsync<TItem, TKey>(
             this ICache<TItem, TKey> cache,
             TKey key
             )
         {
-            return await cache.RemoveAsync(key, CancellationToken.None).ConfigureAwait(false);
+            return cache.RemoveAsync(key, CancellationToken.None);
         }
     }
 }
