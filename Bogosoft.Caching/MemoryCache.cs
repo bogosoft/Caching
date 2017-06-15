@@ -158,13 +158,13 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value that might contain an object of the cached item type.
         /// </returns>
-        public IMayBe<TItem> Get(TKey key)
+        public MayBe<TItem> Get(TKey key)
         {
             @lock.EnterReadLock();
 
             try
             {
-                IMayBe<TItem> result;
+                MayBe<TItem> result;
 
                 if (items.ContainsKey(key) && items[key].Expiry > dates.Invoke())
                 {

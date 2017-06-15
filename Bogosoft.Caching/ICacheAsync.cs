@@ -58,7 +58,7 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value that might contain an object of the cached item type.
         /// </returns>
-        Task<IMayBe<TItem>> GetAsync(TKey key, CancellationToken token);
+        Task<MayBe<TItem>> GetAsync(TKey key, CancellationToken token);
 
         /// <summary>
         /// Attempt to remove a previously cached item from the current cache.

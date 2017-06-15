@@ -123,7 +123,7 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value that might contain an object of the cached item type.
         /// </returns>
-        public Task<IMayBe<TItem>> GetAsync(TKey key, CancellationToken token)
+        public Task<MayBe<TItem>> GetAsync(TKey key, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

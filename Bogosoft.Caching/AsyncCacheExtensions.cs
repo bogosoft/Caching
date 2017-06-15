@@ -79,7 +79,7 @@ namespace Bogosoft.Caching
         /// <returns>
         /// A value that might contain an object of the cached item type.
         /// </returns>
-        public static Task<IMayBe<TItem>> GetAsync<TItem, TKey>(
+        public static Task<MayBe<TItem>> GetAsync<TItem, TKey>(
             this ICacheAsync<TItem, TKey> cache,
             TKey key
             )
